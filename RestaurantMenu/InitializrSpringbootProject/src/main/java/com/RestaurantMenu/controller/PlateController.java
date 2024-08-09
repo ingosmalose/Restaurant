@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -76,5 +77,20 @@ public class PlateController {
                 .build();
         service.save(insert);
         return null;
+    }
+    
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody PlateDTO info){
+        Optional<Plate> list = service.findById(id);
+        if(list.isPresent()){
+            Plate plate = list.get();
+            plate.setDetail(info.getDetail());
+            plate.setMenu(info.getMenu());
+            plate.setName(info.getName());
+            plate.setPrice(info.getPrice());
+            service.save(plate);
+            return ResponseEntity.ok("Plate updated successfully");
+        }
+        return ResponseEntity.notFound().build();
     }
 }
